@@ -4,9 +4,9 @@ import { InterestForm } from "@/components/interest-form";
 import { directoryResources, meetingSchedule, programSteps } from "@/lib/program-data";
 
 export const metadata: Metadata = {
-  title: "Trauma-Aware 12-Step Community",
+  title: "A New Path 12-Step Community",
   description:
-    "Guided 12-step modules, anonymous participation, community support, and resource links for people working through compulsions, unwanted behaviors, and addictions."
+    "A New Path is a 12-step program for dependencies, codependencies, unwanted behaviors, and addictions, built around step work, community, and help from a Higher Power."
 };
 
 export default function HomePage() {
@@ -20,13 +20,14 @@ export default function HomePage() {
             <span className="rounded-full border border-brand/15 bg-white/70 px-4 py-2">Trauma-aware</span>
           </div>
           <h1 className="mt-6 max-w-4xl text-5xl font-semibold leading-tight text-slate-900 md:text-6xl">
-            An online 12-step community built from the A New Path program.
+            A New Path is a 12-step program for dependencies, codependencies, unwanted behaviors, and addictions.
           </h1>
           <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-700">
-            This standalone project translates the PDF into an interactive experience:
-            guided teaching, locked step modules, written assignments, uploads,
-            anonymous community support, and repeated Zoom or Teams cohorts for people
-            who want to move through recovery together.
+            The 12 steps are the core basis of this work. A New Path takes a broad
+            approach to addiction and dependency, and it places a strong emphasis on
+            seeking real help from a Higher Power. This is not presented as something
+            abstract. It is something real, and the individual must begin that search
+            seriously while moving through the work.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
             <Link
@@ -83,9 +84,10 @@ export default function HomePage() {
               The site is built around a locked 12-step journey.
             </h2>
             <p className="mt-5 text-lg leading-8 text-slate-700">
-              The source PDF says each step should be presented as its own module with
-              teaching, practice, assignment work, and a reflection question. The next
-              step opens only after the current one is completed and reviewed.
+              Each step is treated as its own guided module with teaching, assignment
+              work, reflection, and progression into the next step only after the
+              current one is completed. The program is built on the 12-step path and on
+              the conviction that lasting change requires help beyond self-will.
             </p>
           </div>
           <div className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -134,9 +136,9 @@ export default function HomePage() {
             </h2>
             <p className="mt-5 text-lg leading-8 text-slate-700">
               Members can work alone, alongside a sponsor, or within repeated Teams or
-              Zoom cohorts. The prototype now includes device-saved interest submissions,
-              member journaling, mock uploads, community posting, and daily review
-              patterns.
+              Zoom cohorts. The aim is serious step work, honest accountability,
+              community support, and a life that is gradually brought back into order
+              through recovery and help from a Higher Power.
             </p>
           </div>
           <div className="rounded-[30px] border border-brand/10 bg-white/70 p-7 shadow-glow">

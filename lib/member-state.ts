@@ -3,6 +3,9 @@ import type { ProgramStep } from "@/lib/program-data";
 export type StepModuleState = {
   promptResponses: string[];
   reflectionResponse: string;
+  quizResponses: string[];
+  quizPassed: boolean;
+  quizCompletedAt?: string;
   readiness: "starting" | "working" | "ready";
   wantsSponsorFollowUp: boolean;
   lastUpdatedAt?: string;
@@ -51,10 +54,14 @@ export type MemberProfile = {
   createdAt: string;
 };
 
-export function createEmptyModule(step: Pick<ProgramStep, "prompts">): StepModuleState {
+export function createEmptyModule(
+  step: Pick<ProgramStep, "prompts" | "quiz">
+): StepModuleState {
   return {
     promptResponses: step.prompts.map(() => ""),
     reflectionResponse: "",
+    quizResponses: step.quiz ? step.quiz.questions.map(() => "") : [],
+    quizPassed: !step.quiz,
     readiness: "starting",
     wantsSponsorFollowUp: false
   };

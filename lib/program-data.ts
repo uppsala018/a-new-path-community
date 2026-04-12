@@ -9,6 +9,15 @@ export type ProgramStep = {
   teaching: string;
   prompts: string[];
   reflection: string;
+  quiz?: {
+    title: string;
+    passingScore: number;
+    questions: {
+      question: string;
+      options: string[];
+      correctAnswer: string;
+    }[];
+  };
   status: StepStatus;
 };
 
@@ -27,6 +36,122 @@ export const programSteps: ProgramStep[] = [
       "What has this behavior cost you already, and what might it cost if nothing changes?"
     ],
     reflection: "What has this behavior cost me that I can never get back?",
+    quiz: {
+      title: "Step 1 Video Check",
+      passingScore: 10,
+      questions: [
+        {
+          question:
+            "According to the teaching from the video, why is Step 1 often perceived as a painful experience?",
+          options: [
+            "A. Because it demands immediate perfection in behavior starting on the first day.",
+            "B. Because it is an inherently cruel process designed to break the spirit.",
+            "C. Because it forces an honest confrontation with reality and pulls one out of fantasy.",
+            "D. Because it focuses on self-hatred and past failures."
+          ],
+          correctAnswer: "C"
+        },
+        {
+          question:
+            "The teaching suggests that simply admitting a behavior is 'unhealthy' or 'embarrassing' is insufficient for recovery. What deeper action does Step 1 require?",
+          options: [
+            "A. Publicly declaring the problem to everyone in one's life immediately.",
+            "B. The development of a complex strategy to manage the behavior better.",
+            "C. The ability to explain the psychological origins of the behavior.",
+            "D. A complete surrender to the truth and the cessation of bargaining."
+          ],
+          correctAnswer: "D"
+        },
+        {
+          question:
+            "According to the cycle described in the video, what usually precedes the unwanted behavior?",
+          options: [
+            "A. The immediate experience of shame and regret.",
+            "B. A sudden burst of energy and overconfidence.",
+            "C. A logical decision that the behavior is the best course of action.",
+            "D. Feelings of tension, loneliness, fear, or emptiness."
+          ],
+          correctAnswer: "D"
+        },
+        {
+          question:
+            "What is described as one of the 'deepest costs' of remaining in the cycle of unwanted behavior?",
+          options: [
+            "A. The physical decline in health and loss of sleep.",
+            "B. Becoming physically absent from friends and family.",
+            "C. The loss of the ability to trust oneself.",
+            "D. The loss of financial resources and practical momentum."
+          ],
+          correctAnswer: "C"
+        },
+        {
+          question:
+            "How does the teaching from the video define the role of Step 1 in the overall recovery program?",
+          options: [
+            "A. It is a temporary phase that should be moved past as quickly as possible.",
+            "B. It is the foundation that makes the rest of the program possible.",
+            "C. It is a performance required to impress others in the program.",
+            "D. It is the final goal that marks the end of the journey."
+          ],
+          correctAnswer: "B"
+        },
+        {
+          question:
+            "Based on the video's teaching script, what does the behavior 'promise' to provide, and why is this promise false?",
+          options: [
+            "A. It promises excitement, but it actually causes physical exhaustion.",
+            "B. It promises relief or solution, but only interrupts pain while deepening the underlying pattern.",
+            "C. It promises to reconnect me with others, but it actually damages trust.",
+            "D. It promises to help me face my fears, but it actually makes me more fearful."
+          ],
+          correctAnswer: "B"
+        },
+        {
+          question:
+            "Why is Step 1 described as an 'offense to pride' in the teaching script?",
+          options: [
+            "A. Because it forces a public admission of failure in front of peers.",
+            "B. Because it requires acknowledging that one is a bad person.",
+            "C. Because it challenges the belief that one can manage and save oneself alone.",
+            "D. Because it requires adopting religious language that may feel uncomfortable."
+          ],
+          correctAnswer: "C"
+        },
+        {
+          question:
+            "What shift in terminology does the video suggest occurs during Step 1?",
+          options: [
+            "A. Stop calling 'addiction' a 'disease.'",
+            "B. Stop calling a 'habit' a 'choice.'",
+            "C. Stop calling 'chaos' a 'choice' and 'bondage' 'freedom.'",
+            "D. Stop calling 'mistakes' 'failures.'"
+          ],
+          correctAnswer: "C"
+        },
+        {
+          question:
+            "According to the teaching script, what happens the moment an individual stops defending their behavior?",
+          options: [
+            "A. They become defenseless and more vulnerable to the behavior.",
+            "B. They become reachable, teachable, and open to help.",
+            "C. They lose their sense of identity and self-worth.",
+            "D. They immediately feel a sense of total relief and joy."
+          ],
+          correctAnswer: "B"
+        },
+        {
+          question:
+            "What does the phrase 'clean truth is better than dirty confusion' imply in the context of the video's teaching?",
+          options: [
+            "A. That confusion is a sign of a moral failing that must be scrubbed away.",
+            "B. That one must physically clean their environment to begin recovery.",
+            "C. That recovery is a simple process of following clear, 'clean' rules.",
+            "D. That honesty, even if painful, provides a solid and clear ground for recovery."
+          ],
+          correctAnswer: "D"
+        }
+      ]
+    },
     status: "current"
   },
   {
@@ -36,7 +161,7 @@ export const programSteps: ProgramStep[] = [
     statement: "I believe change is possible through something greater than my willpower.",
     summary: "Open to the possibility of help, healing, and support beyond isolation.",
     teaching:
-      "Step 2 is the return of hope, but not shallow optimism. It is the slow willingness to believe that you are not doomed to repeat the same pattern forever. This step does not demand perfect certainty or a rigid belief system. It asks whether you can loosen your grip on the lie that isolation is strength. Something greater than your current willpower may be a higher power, a recovery process, a fellowship, truth itself, or the wisdom of people who have walked this road before you. What matters is this: your private system has not been enough. Step 2 opens the door to the possibility that help can reach you if you stop insisting on saving yourself alone.",
+      "Step 2 is the return of hope, but not shallow optimism. It is the slow willingness to believe that you are not doomed to repeat the same pattern forever. This step asks you to admit that self-will has not been enough and that real help must come from beyond yourself. In this program, that help is spoken of as a Higher Power, and many people will understand that as God. Someone who does not yet know what they believe does not have to pretend certainty, but they do need honesty, humility, and openness. Step 2 is not asking for a polished theology. It is asking whether you are willing to stop acting as if you are your own savior. Recovery begins to deepen when a person becomes willing to seek real help instead of worshipping their own exhausted strength.",
     prompts: [
       "What would it mean to stop fighting this entirely on your own?",
       "Where have you already seen evidence that change is possible?",
@@ -52,7 +177,7 @@ export const programSteps: ProgramStep[] = [
     statement: "I make a deliberate decision to commit to this process.",
     summary: "Recovery becomes concrete when you choose the path, not only the idea of it.",
     teaching:
-      "Step 3 is where recovery stops being an interesting thought and becomes a real decision. Many people linger between wanting change and choosing it. This step asks for movement. It does not require that fear disappear first. It asks whether you are willing to place your life, your behavior, and your future into a different pattern than the one that has ruled you until now. Commitment here is not loud. It is quiet, serious, and lived. You begin to organize your choices around recovery instead of organizing recovery around your impulses. Step 3 is the turning of the body, not just the mind.",
+      "Step 3 is where recovery stops being an interesting thought and becomes a real decision. Many people linger between wanting change and choosing it. This step asks for movement. It does not require that fear disappear first. It asks whether you are willing to place your life, your behavior, and your future into the care of a path greater than your impulses and greater than your own unstable will. For many, this is understood as turning toward God in trust rather than continuing to lean on self-rule. Someone may still be early in faith, but the step remains the same: stop making your own will the highest authority. Commitment here is not loud. It is quiet, serious, and lived.",
     prompts: [
       "What are you deciding to do differently now?",
       "What resistance is still present?",
@@ -85,7 +210,7 @@ export const programSteps: ProgramStep[] = [
     statement: "I share my inventory with myself, my higher power, and one trusted person.",
     summary: "Step 5 moves private truth into spoken truth.",
     teaching:
-      "Step 5 is where truth becomes relational. There are things that continue to poison us as long as they remain sealed inside. Shame grows in secrecy; it weakens when spoken in a safe and honest place. This step is not about dramatic confession or emotional spectacle. It is about allowing what is real to be witnessed without disguise. To speak the truth aloud is to stop carrying the illusion that you must hide in order to survive. In this step, honesty becomes embodied. What was hidden begins to loosen. What was frozen begins to move.",
+      "Step 5 is where truth becomes relational and accountable. There are things that continue to poison us as long as they remain sealed inside. Shame grows in secrecy; it weakens when spoken in a safe and honest place before God, before yourself, and before one trusted person. This step is not about dramatic confession or emotional spectacle. It is about bringing hidden truth into the light so it no longer rules from the dark. To speak the truth aloud is to stop hiding behind image, pride, and fear. In this step, honesty becomes embodied. What was hidden begins to loosen. What was frozen begins to move.",
     prompts: [
       "What part of your inventory is hardest to say out loud?",
       "Who is safe enough to hear this with respect and confidentiality?",
@@ -101,7 +226,7 @@ export const programSteps: ProgramStep[] = [
     statement: "I become willing to release the patterns driving my behavior.",
     summary: "Willingness matters even before confidence does.",
     teaching:
-      "Step 6 asks whether you are truly ready to be changed, not just rescued from consequences. Many patterns survive because they still feel useful. They protect, numb, distract, inflate, or defend. This step asks you to notice the ways you still cling to what harms you because part of you believes it is necessary. Willingness is a profound spiritual posture. It means you stop arguing for the right to stay the same. You may not yet know how change will happen, but you become open to no longer worshipping the pattern that has ruled you.",
+      "Step 6 asks whether you are truly ready to be changed, not just rescued from consequences. Many patterns survive because they still feel useful. They protect, numb, distract, inflate, or defend. This step asks you to notice the ways you still cling to what harms you because part of you still believes it is necessary. Willingness is a profound spiritual posture. It means you stop arguing for the right to stay the same and stop defending the very thing that is ruining you. You may not yet know how change will happen, but you become open to God removing what you can no longer heal by self-effort alone.",
     prompts: [
       "Which patterns are you most ready to change?",
       "What does each pattern still protect you from?",
@@ -117,7 +242,7 @@ export const programSteps: ProgramStep[] = [
     statement: "With humility, I ask for support in being changed.",
     summary: "Recovery grows through humility, connection, and help-seeking.",
     teaching:
-      "Step 7 is the practice of humility. Humility is not humiliation or self-erasure. It is the honest recognition that you cannot force transformation through ego alone. This step teaches a different kind of strength: the strength to ask, to receive, to soften, and to become teachable. The defects and reactions that once felt fused with your identity are no longer treated as permanent. You begin to stand before truth without pretending to be self-sufficient. Step 7 says change is not conquered; it is received, lived, and practiced in relationship.",
+      "Step 7 is the practice of humility. Humility is not humiliation or self-erasure. It is the honest recognition that you cannot force transformation through ego alone. This step teaches a different kind of strength: the strength to ask, to receive, to soften, and to become teachable before God and before truth. The defects and reactions that once felt fused with your identity are no longer treated as permanent. You begin to stand without pretending to be self-sufficient. Step 7 says change is not conquered by pride; it is received through surrender, prayer, and a willing heart.",
     prompts: [
       "What kind of help do you need right now?",
       "How do pride or shame make support harder to receive?",
@@ -181,7 +306,7 @@ export const programSteps: ProgramStep[] = [
     statement: "I cultivate a regular practice of stillness and connection to my deeper self.",
     summary: "Stillness, prayer, reflection, or meditation become part of recovery.",
     teaching:
-      "Step 11 is the discipline of making room for quiet guidance. The addiction cycle trains the mind toward urgency, noise, and reaction. This step trains you toward stillness, listening, and conscious contact with something deeper than craving or fear. The form may vary: prayer, meditation, silence, breath, reflection, scripture, journaling, or simple attentive presence. What matters is that you begin to live from an inner center rather than from constant impulse. Step 11 is where recovery becomes rooted, not just managed.",
+      "Step 11 is the discipline of making room for quiet guidance. The addiction cycle trains the mind toward urgency, noise, and reaction. This step trains you toward stillness, prayer, listening, and conscious contact with God rather than with craving or fear. Someone may begin this step awkwardly, uncertainly, or with very little language for prayer, but the direction still matters: become willing to seek real guidance instead of living under the dictatorship of impulse. Step 11 is where recovery becomes rooted, not just managed. Over time, stillness becomes a place of correction, strength, and peace.",
     prompts: [
       "What form of stillness or prayer feels available to you?",
       "What interferes with inner practice most often?",

@@ -14,8 +14,28 @@ export function PublicContentPage({
   backHref,
   backLabel
 }: PublicContentPageProps) {
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const pageUrl = `${baseUrl}${backHref}/${page.slug}`;
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: page.seoTitle,
+    description: page.seoDescription,
+    keywords: page.keywords.join(", "),
+    mainEntityOfPage: pageUrl,
+    about: [sectionLabel, ...page.keywords],
+    publisher: {
+      "@type": "Organization",
+      name: "A New Path Community"
+    }
+  };
+
   return (
     <main className="mx-auto max-w-5xl px-6 py-14 lg:px-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
       <div className="rounded-[34px] border border-brand/10 bg-surface/95 p-8 shadow-glow">
         <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-dark">
           {sectionLabel}

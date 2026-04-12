@@ -22,7 +22,21 @@ export async function generateMetadata({
   return {
     title: page.seoTitle,
     description: page.seoDescription,
-    keywords: page.keywords
+    keywords: page.keywords,
+    alternates: {
+      canonical: `/steps/${page.slug}`
+    },
+    openGraph: {
+      title: page.seoTitle,
+      description: page.seoDescription,
+      type: "article",
+      url: `/steps/${page.slug}`
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: page.seoTitle,
+      description: page.seoDescription
+    }
   };
 }
 

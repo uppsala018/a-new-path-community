@@ -4,12 +4,13 @@ import type { ReactNode } from "react";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"),
   title: {
     default: "A New Path Community",
     template: "%s | A New Path Community"
   },
   description:
-    "A trauma-aware online 12-step platform with guided modules, anonymous participation, support resources, and community pathways for unwanted behaviors, compulsions, and addictions."
+    "A New Path is a 12-step recovery platform for dependencies, codependencies, unwanted behaviors, compulsions, and addictions, with guided step work, community support, and public recovery education."
 };
 
 const nav = [

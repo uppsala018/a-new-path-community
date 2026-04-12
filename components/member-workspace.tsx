@@ -34,8 +34,17 @@ export function MemberWorkspace({
   const [saving, setSaving] = useState(false);
   const [draftPromptResponses, setDraftPromptResponses] = useState<string[]>([]);
   const [draftReflectionResponse, setDraftReflectionResponse] = useState("");
+  const [draftQuizResponses, setDraftQuizResponses] = useState<string[]>([]);
   const [draftSponsorFollowUp, setDraftSponsorFollowUp] = useState(false);
   const [draftDirty, setDraftDirty] = useState(false);
+  const [quizResult, setQuizResult] = useState<{
+    score: number;
+    wrongItems: {
+      index: number;
+      selectedAnswer: string;
+      correctAnswer: string;
+    }[];
+  } | null>(null);
 
   async function persistProgress(nextProgress: StepProgress) {
     setSaving(true);
@@ -90,6 +99,10 @@ export function MemberWorkspace({
     return progress.modules[availableStep.number] || createEmptyModule(availableStep);
   }, [availableStep, progress.modules]);
 
+  const quizDefinition = availableStep.quiz;
+  const quizRequired = Boolean(quizDefinition);
+  const quizPassed = activeModule.quizPassed;
+
   const completedPromptCount = useMemo(() => {
     return draftPromptResponses.filter((response) => response.trim().length >= 20).length;
   }, [draftPromptResponses]);
@@ -97,11 +110,16 @@ export function MemberWorkspace({
   const reflectionReady = draftReflectionResponse.trim().length >= 30;
 
   const draftReadiness = useMemo(() => {
-    if (completedPromptCount === availableStep.prompts.length && reflectionReady) {
+    if (
+      (!quizRequired || quizPassed) &&
+      completedPromptCount === availableStep.prompts.length &&
+      reflectionReady
+    ) {
       return "ready";
     }
 
     if (
+      draftQuizResponses.some((response) => response) ||
       completedPromptCount > 0 ||
       draftReflectionResponse.trim().length > 0 ||
       draftSponsorFollowUp
@@ -114,19 +132,28 @@ export function MemberWorkspace({
     availableStep.prompts.length,
     completedPromptCount,
     draftReflectionResponse,
+    draftQuizResponses,
     draftSponsorFollowUp,
+    quizPassed,
+    quizRequired,
     reflectionReady
   ]);
 
   useEffect(() => {
     const module = progress.modules[availableStep.number] || createEmptyModule(availableStep);
+    const nextQuizResponses = quizDefinition
+      ? quizDefinition.questions.map((_, index) => module.quizResponses[index] || "")
+      : [];
+
     setDraftPromptResponses(
       availableStep.prompts.map((_, index) => module.promptResponses[index] || "")
     );
     setDraftReflectionResponse(module.reflectionResponse);
+    setDraftQuizResponses(nextQuizResponses);
     setDraftSponsorFollowUp(module.wantsSponsorFollowUp);
     setDraftDirty(false);
-  }, [availableStep, progress.modules]);
+    setQuizResult(null);
+  }, [availableStep, progress.modules, quizDefinition]);
 
   function buildUpdatedModule(
     stepNumber: number,
@@ -166,6 +193,16 @@ export function MemberWorkspace({
     setDraftDirty(true);
   }
 
+  function updateQuizResponse(questionIndex: number, answer: string) {
+    setDraftQuizResponses((current) => {
+      const next = [...current];
+      next[questionIndex] = answer;
+      return next;
+    });
+    setDraftDirty(true);
+    setQuizResult(null);
+  }
+
   function updateSponsorFlag(wantsSponsorFollowUp: boolean) {
     setDraftSponsorFollowUp(wantsSponsorFollowUp);
     setDraftDirty(true);
@@ -176,6 +213,9 @@ export function MemberWorkspace({
       ...module,
       promptResponses: draftPromptResponses,
       reflectionResponse: draftReflectionResponse,
+      quizResponses: draftQuizResponses,
+      quizPassed: module.quizPassed,
+      quizCompletedAt: module.quizCompletedAt,
       wantsSponsorFollowUp: draftSponsorFollowUp,
       readiness: draftReadiness
     }));
@@ -239,6 +279,13 @@ export function MemberWorkspace({
       return;
     }
 
+    if (step.quiz && !activeModule.quizPassed) {
+      setModuleMessage(
+        "Pass the Step 1 video check before the assignment prompts can be completed."
+      );
+      return;
+    }
+
     const promptCount = draftPromptResponses.filter((response) => response.trim().length >= 20).length;
     const hasReflection = draftReflectionResponse.trim().length >= 30;
 
@@ -253,6 +300,9 @@ export function MemberWorkspace({
       ...module,
       promptResponses: draftPromptResponses,
       reflectionResponse: draftReflectionResponse,
+      quizResponses: draftQuizResponses,
+      quizPassed: module.quizPassed,
+      quizCompletedAt: module.quizCompletedAt,
       wantsSponsorFollowUp: draftSponsorFollowUp,
       readiness: "ready"
     }));
@@ -287,9 +337,62 @@ export function MemberWorkspace({
 
     setDraftPromptResponses(availableStep.prompts.map(() => ""));
     setDraftReflectionResponse("");
+    setDraftQuizResponses(availableStep.quiz ? availableStep.quiz.questions.map(() => "") : []);
     setDraftSponsorFollowUp(false);
     setDraftDirty(false);
+    setQuizResult(null);
     setModuleMessage("Draft cleared for this module.");
+    void persistProgress(nextProgress);
+  }
+
+  function submitQuizCheck() {
+    if (!quizDefinition) {
+      return;
+    }
+
+    if (draftQuizResponses.some((answer) => !answer)) {
+      setModuleMessage("Answer every quiz question before checking your results.");
+      return;
+    }
+
+    const wrongItems = quizDefinition.questions
+      .map((item, index) => ({
+        index,
+        selectedAnswer: draftQuizResponses[index],
+        correctAnswer: item.correctAnswer
+      }))
+      .filter((item) => item.selectedAnswer !== item.correctAnswer);
+
+    const score = quizDefinition.questions.length - wrongItems.length;
+    const passed = score === quizDefinition.passingScore;
+
+    const nextProgress = buildUpdatedModule(availableStep.number, (module) => ({
+      ...module,
+      promptResponses: draftPromptResponses,
+      reflectionResponse: draftReflectionResponse,
+      quizResponses: draftQuizResponses,
+      quizPassed: passed,
+      quizCompletedAt: passed ? new Date().toISOString() : module.quizCompletedAt,
+      wantsSponsorFollowUp: draftSponsorFollowUp,
+      readiness:
+        passed &&
+        completedPromptCount === availableStep.prompts.length &&
+        reflectionReady
+          ? "ready"
+          : "working"
+    }));
+
+    if (!nextProgress) {
+      return;
+    }
+
+    setQuizResult({ score, wrongItems });
+    setDraftDirty(false);
+    setModuleMessage(
+      passed
+        ? "Quiz passed. The assignment prompts are now open."
+        : "Some answers were wrong. Review the corrections below, then try again."
+    );
     void persistProgress(nextProgress);
   }
 
@@ -564,6 +667,21 @@ export function MemberWorkspace({
                     {availableStep.statement}
                   </p>
                 </div>
+                {availableStep.number === 1 ? (
+                  <div className="mt-6 rounded-[28px] border border-brand/15 bg-white/90 p-5 shadow-glow">
+                    <p className="text-sm font-semibold uppercase tracking-[0.16em] text-brand-dark">
+                      Step 1 Video Teaching
+                    </p>
+                    <video
+                      className="mt-4 w-full rounded-[22px] border border-brand/10 bg-slate-950"
+                      controls
+                      preload="metadata"
+                    >
+                      <source src="/Understanding_Step_1.mp4" type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                ) : null}
                 <p className="mt-5 text-base leading-8 text-slate-600 md:text-lg">
                   {availableStep.summary}
                 </p>
@@ -594,6 +712,123 @@ export function MemberWorkspace({
               </div>
             </div>
 
+            {quizDefinition ? (
+              <div className="mt-6 rounded-[28px] border border-brand/15 bg-white/90 p-6 shadow-glow">
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                  <div>
+                    <p className="text-sm font-semibold uppercase tracking-[0.16em] text-brand-dark">
+                      {quizDefinition.title}
+                    </p>
+                    <h3 className="mt-2 text-2xl font-semibold text-slate-900">
+                      Watch the video, then answer all 10 questions
+                    </h3>
+                    <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
+                      You must answer every question correctly before the Step 1 assignment
+                      prompts open. If anything is wrong, the quiz will show what to correct.
+                    </p>
+                  </div>
+                  <div className="rounded-[22px] border border-brand/10 bg-surface/90 px-4 py-3 text-sm">
+                    <p className="font-semibold text-slate-900">
+                      {quizPassed ? "Quiz passed" : "Quiz not passed yet"}
+                    </p>
+                    <p className="mt-1 text-slate-600">
+                      {draftQuizResponses.filter(Boolean).length} / {quizDefinition.questions.length} answered
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-6 space-y-4">
+                  {quizDefinition.questions.map((item, questionIndex) => (
+                    <div key={item.question} className="rounded-[24px] border border-brand/10 bg-surface/80 p-5">
+                      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+                        Question {questionIndex + 1}
+                      </p>
+                      <p className="mt-2 text-lg font-semibold leading-8 text-slate-900">
+                        {item.question}
+                      </p>
+                      <div className="mt-4 space-y-3">
+                        {item.options.map((option) => {
+                          const optionLetter = option.split(".")[0];
+                          const checked = draftQuizResponses[questionIndex] === optionLetter;
+
+                          return (
+                            <label
+                              key={option}
+                              className={`flex cursor-pointer items-start gap-3 rounded-2xl border px-4 py-4 text-sm leading-7 transition ${
+                                checked
+                                  ? "border-brand bg-white text-slate-900"
+                                  : "border-brand/10 bg-white/80 text-slate-700 hover:border-brand/25"
+                              }`}
+                            >
+                              <input
+                                type="radio"
+                                name={`step-quiz-${questionIndex}`}
+                                checked={checked}
+                                onChange={() => updateQuizResponse(questionIndex, optionLetter)}
+                                className="mt-1"
+                              />
+                              <span>{option}</span>
+                            </label>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-6 flex flex-wrap items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={submitQuizCheck}
+                    className="rounded-full bg-brand px-5 py-3 text-sm font-semibold text-white hover:bg-brand-dark"
+                  >
+                    Check quiz answers
+                  </button>
+                  {quizPassed ? (
+                    <p className="text-sm font-semibold text-emerald-700">
+                      Step 1 quiz passed. You can now work on the assignments below.
+                    </p>
+                  ) : (
+                    <p className="text-sm text-slate-600">
+                      A perfect score is required before the assignment section opens.
+                    </p>
+                  )}
+                </div>
+
+                {quizResult ? (
+                  <div className="mt-6 rounded-[24px] border border-brand/10 bg-surface/90 p-5">
+                    <p className="text-sm font-semibold uppercase tracking-[0.16em] text-brand-dark">
+                      Quiz result
+                    </p>
+                    <p className="mt-3 text-xl font-semibold text-slate-900">
+                      Score: {quizResult.score} / {quizDefinition.questions.length}
+                    </p>
+                    {quizResult.wrongItems.length ? (
+                      <div className="mt-4 space-y-3">
+                        {quizResult.wrongItems.map((item) => (
+                          <div key={item.index} className="rounded-2xl bg-white px-4 py-4 text-sm leading-7 text-slate-700">
+                            <p className="font-semibold text-slate-900">
+                              Question {item.index + 1} needs another look
+                            </p>
+                            <p className="mt-2">
+                              Your answer: {item.selectedAnswer || "No answer selected"}
+                            </p>
+                            <p className="mt-1">
+                              Correct answer: {item.correctAnswer}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="mt-3 text-sm leading-7 text-slate-700">
+                        You answered every question correctly.
+                      </p>
+                    )}
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
+
             <div className="mt-6 grid gap-4 md:grid-cols-2">
               <div className="rounded-[24px] border border-brand/10 bg-surface/90 p-5">
                 <p className="text-sm font-semibold uppercase tracking-[0.16em] text-brand-dark">
@@ -611,13 +846,16 @@ export function MemberWorkspace({
                   {availableStep.reflection}
                 </p>
                 <p className="mt-3 text-sm leading-7 text-slate-600">
-                  Answer this question in the reflection box below before the next step opens.
+                  {quizRequired && !quizPassed
+                    ? "Pass the video check first. Your reflection answer opens after the quiz is fully correct."
+                    : "Answer this question in the reflection box below before the next step opens."}
                 </p>
                 <textarea
                   className="mt-4 min-h-44 w-full rounded-[22px] border border-brand/15 bg-white px-4 py-4 text-sm outline-none focus:border-brand"
                   placeholder="Write your answer to this reflection question here."
                   value={draftReflectionResponse}
                   onChange={(event) => updateReflection(event.target.value)}
+                  disabled={quizRequired && !quizPassed}
                 />
               </div>
             </div>
@@ -664,6 +902,11 @@ export function MemberWorkspace({
               <p className="text-sm font-semibold uppercase tracking-[0.16em] text-slate-900">
                 Assignment prompts
               </p>
+              {quizRequired && !quizPassed ? (
+                <div className="mt-4 rounded-2xl border border-brand/10 bg-white/90 px-4 py-4 text-sm leading-7 text-slate-700">
+                  Finish the Step 1 video check with all answers correct to open these prompts.
+                </div>
+              ) : null}
               <div className="mt-4 space-y-4">
                 {availableStep.prompts.map((prompt, index) => (
                   <div key={prompt} className="rounded-2xl bg-white/90 p-4">
@@ -680,6 +923,7 @@ export function MemberWorkspace({
                       placeholder="Write a specific answer here, then press Save draft when you want to return later."
                       value={draftPromptResponses[index] || ""}
                       onChange={(event) => updatePromptResponse(index, event.target.value)}
+                      disabled={quizRequired && !quizPassed}
                     />
                   </div>
                 ))}

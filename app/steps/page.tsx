@@ -3,9 +3,19 @@ import Link from "next/link";
 import { stepPages } from "@/lib/content-education";
 
 export const metadata: Metadata = {
-  title: "12 Step Guide",
+  title: "12 Step Recovery Guide",
   description:
-    "Public step-by-step pages for all 12 steps in the A New Path program, designed as standalone educational resources."
+    "Read all 12 public step pages in A New Path, a recovery guide for dependencies, codependencies, unwanted behaviors, compulsions, and addictions.",
+  alternates: {
+    canonical: "/steps"
+  },
+  openGraph: {
+    title: "12 Step Recovery Guide",
+    description:
+      "Read all 12 public step pages in A New Path, a recovery guide for dependencies, codependencies, unwanted behaviors, compulsions, and addictions.",
+    type: "website",
+    url: "/steps"
+  }
 };
 
 export default function StepsIndexPage() {
@@ -19,8 +29,9 @@ export default function StepsIndexPage() {
           All 12 public step pages
         </h1>
         <p className="mt-6 text-lg leading-8 text-slate-700">
-          Each of these pages introduces one step as a standalone public educational
-          resource, while the member area turns the same step into an interactive module.
+          Each page explains one of the 12 steps in A New Path as a standalone public
+          recovery resource. The member area then turns that same step into guided
+          writing, reflection, saving, and progression work.
         </p>
       </div>
       <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
