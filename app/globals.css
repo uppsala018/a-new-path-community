@@ -1,0 +1,39 @@
+﻿@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-background text-foreground antialiased;
+  background-image:
+    radial-gradient(circle at top left, rgba(183, 112, 60, 0.14), transparent 28%),
+    radial-gradient(circle at top right, rgba(47, 93, 80, 0.14), transparent 26%),
+    linear-gradient(180deg, #faf5ec 0%, #f3ecdf 48%, #efe5d5 100%);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: Georgia, Cambria, "Times New Roman", serif;
+}
+
+body,
+input,
+textarea,
+button,
+select {
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+}
+
+::selection {
+  background: rgba(47, 93, 80, 0.22);
+  color: #163028;
+}
