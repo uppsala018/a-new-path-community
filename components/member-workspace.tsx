@@ -96,7 +96,27 @@ export function MemberWorkspace({
   }
 
   const activeModule = useMemo(() => {
-    return progress.modules[availableStep.number] || createEmptyModule(availableStep);
+    const storedModule = progress.modules[availableStep.number];
+    const emptyModule = createEmptyModule(availableStep);
+
+    if (!storedModule) {
+      return emptyModule;
+    }
+
+    return {
+      ...emptyModule,
+      ...storedModule,
+      promptResponses: availableStep.prompts.map(
+        (_, index) => storedModule.promptResponses?.[index] || ""
+      ),
+      quizResponses: availableStep.quiz
+        ? availableStep.quiz.questions.map(
+            (_, index) => storedModule.quizResponses?.[index] || ""
+          )
+        : [],
+      quizPassed:
+        availableStep.quiz ? Boolean(storedModule.quizPassed) : true
+    };
   }, [availableStep, progress.modules]);
 
   const quizDefinition = availableStep.quiz;
@@ -140,7 +160,7 @@ export function MemberWorkspace({
   ]);
 
   useEffect(() => {
-    const module = progress.modules[availableStep.number] || createEmptyModule(availableStep);
+    const module = activeModule;
     const nextQuizResponses = quizDefinition
       ? quizDefinition.questions.map((_, index) => module.quizResponses[index] || "")
       : [];
@@ -153,7 +173,7 @@ export function MemberWorkspace({
     setDraftSponsorFollowUp(module.wantsSponsorFollowUp);
     setDraftDirty(false);
     setQuizResult(null);
-  }, [availableStep, progress.modules, quizDefinition]);
+  }, [activeModule, availableStep, quizDefinition]);
 
   function buildUpdatedModule(
     stepNumber: number,
