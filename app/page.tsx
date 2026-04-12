@@ -42,6 +42,18 @@ export default function HomePage() {
             >
               Explore the member area
             </Link>
+            <Link
+              href="/steps"
+              className="rounded-full border border-brand/20 bg-white/70 px-6 py-3 text-sm font-semibold text-brand-dark hover:bg-white"
+            >
+              Public step pages
+            </Link>
+            <Link
+              href="/learn"
+              className="rounded-full border border-brand/20 bg-white/70 px-6 py-3 text-sm font-semibold text-brand-dark hover:bg-white"
+            >
+              Learn pages
+            </Link>
           </div>
           <div className="mt-10 grid gap-4 sm:grid-cols-3">
             <div className="rounded-[28px] border border-brand/10 bg-white/70 p-5 shadow-glow">
@@ -89,6 +101,20 @@ export default function HomePage() {
               current one is completed. The program is built on the 12-step path and on
               the conviction that lasting change requires help beyond self-will.
             </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link
+                href="/steps"
+                className="rounded-full bg-brand px-5 py-3 text-sm font-semibold text-white hover:bg-brand-dark"
+              >
+                Open all steps
+              </Link>
+              <Link
+                href="/learn"
+                className="rounded-full border border-brand/20 bg-white px-5 py-3 text-sm font-semibold text-brand-dark hover:bg-white"
+              >
+                Open learn pages
+              </Link>
+            </div>
           </div>
           <div className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {programSteps.map((step) => (
