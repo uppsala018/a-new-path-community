@@ -37,6 +37,7 @@ export function MemberWorkspace({
   const [draftQuizResponses, setDraftQuizResponses] = useState<string[]>([]);
   const [draftSponsorFollowUp, setDraftSponsorFollowUp] = useState(false);
   const [draftDirty, setDraftDirty] = useState(false);
+  const [activeQuizQuestion, setActiveQuizQuestion] = useState(0);
   const [quizResult, setQuizResult] = useState<{
     score: number;
     wrongItems: {
@@ -172,6 +173,7 @@ export function MemberWorkspace({
     setDraftQuizResponses(nextQuizResponses);
     setDraftSponsorFollowUp(module.wantsSponsorFollowUp);
     setDraftDirty(false);
+    setActiveQuizQuestion(0);
     setQuizResult(null);
   }, [activeModule, availableStep, quizDefinition]);
 
@@ -301,7 +303,7 @@ export function MemberWorkspace({
 
     if (step.quiz && !activeModule.quizPassed) {
       setModuleMessage(
-        "Pass the Step 1 video check before the assignment prompts can be completed."
+        `Pass the Step ${step.number} video check before the assignment prompts can be completed.`
       );
       return;
     }
@@ -360,6 +362,7 @@ export function MemberWorkspace({
     setDraftQuizResponses(availableStep.quiz ? availableStep.quiz.questions.map(() => "") : []);
     setDraftSponsorFollowUp(false);
     setDraftDirty(false);
+    setActiveQuizQuestion(0);
     setQuizResult(null);
     setModuleMessage("Draft cleared for this module.");
     void persistProgress(nextProgress);
@@ -687,17 +690,17 @@ export function MemberWorkspace({
                     {availableStep.statement}
                   </p>
                 </div>
-                {availableStep.number === 1 ? (
+                {availableStep.video ? (
                   <div className="mt-6 rounded-[28px] border border-brand/15 bg-white/90 p-5 shadow-glow">
                     <p className="text-sm font-semibold uppercase tracking-[0.16em] text-brand-dark">
-                      Step 1 Video Teaching
+                      {availableStep.video.title}
                     </p>
                     <video
                       className="mt-4 w-full rounded-[22px] border border-brand/10 bg-slate-950"
                       controls
                       preload="metadata"
                     >
-                      <source src="/Understanding_Step_1.mp4" type="video/mp4" />
+                      <source src={availableStep.video.src} type="video/mp4" />
                       Your browser does not support the video tag.
                     </video>
                   </div>
@@ -740,11 +743,11 @@ export function MemberWorkspace({
                       {quizDefinition.title}
                     </p>
                     <h3 className="mt-2 text-2xl font-semibold text-slate-900">
-                      Watch the video, then answer all 10 questions
+                      Watch the video, then answer all {quizDefinition.questions.length} questions
                     </h3>
                     <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
-                      You must answer every question correctly before the Step 1 assignment
-                      prompts open. If anything is wrong, the quiz will show what to correct.
+                      You must answer every question correctly before the assignment prompts
+                      open. If anything is wrong, the quiz will show what to correct.
                     </p>
                   </div>
                   <div className="rounded-[22px] border border-brand/10 bg-surface/90 px-4 py-3 text-sm">
@@ -758,42 +761,83 @@ export function MemberWorkspace({
                 </div>
 
                 <div className="mt-6 space-y-4">
-                  {quizDefinition.questions.map((item, questionIndex) => (
-                    <div key={item.question} className="rounded-[24px] border border-brand/10 bg-surface/80 p-5">
+                  <div className="rounded-[24px] border border-brand/10 bg-surface/80 p-5">
+                    <div className="flex flex-wrap items-center justify-between gap-3">
                       <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
-                        Question {questionIndex + 1}
+                        Question {activeQuizQuestion + 1} of {quizDefinition.questions.length}
                       </p>
-                      <p className="mt-2 text-lg font-semibold leading-8 text-slate-900">
-                        {item.question}
-                      </p>
-                      <div className="mt-4 space-y-3">
-                        {item.options.map((option) => {
-                          const optionLetter = option.split(".")[0];
-                          const checked = draftQuizResponses[questionIndex] === optionLetter;
-
-                          return (
-                            <label
-                              key={option}
-                              className={`flex cursor-pointer items-start gap-3 rounded-2xl border px-4 py-4 text-sm leading-7 transition ${
-                                checked
-                                  ? "border-brand bg-white text-slate-900"
-                                  : "border-brand/10 bg-white/80 text-slate-700 hover:border-brand/25"
-                              }`}
-                            >
-                              <input
-                                type="radio"
-                                name={`step-quiz-${questionIndex}`}
-                                checked={checked}
-                                onChange={() => updateQuizResponse(questionIndex, optionLetter)}
-                                className="mt-1"
-                              />
-                              <span>{option}</span>
-                            </label>
-                          );
-                        })}
+                      <div className="flex items-center gap-2">
+                        {quizDefinition.questions.map((_, index) => (
+                          <button
+                            key={`quiz-dot-${index}`}
+                            type="button"
+                            onClick={() => setActiveQuizQuestion(index)}
+                            className={`h-2.5 w-2.5 rounded-full ${
+                              index === activeQuizQuestion
+                                ? "bg-brand"
+                                : draftQuizResponses[index]
+                                  ? "bg-brand/45"
+                                  : "bg-slate-300"
+                            }`}
+                            aria-label={`Go to question ${index + 1}`}
+                          />
+                        ))}
                       </div>
                     </div>
-                  ))}
+                    <p className="mt-4 text-lg font-semibold leading-8 text-slate-900">
+                      {quizDefinition.questions[activeQuizQuestion].question}
+                    </p>
+                    <div className="mt-4 space-y-3">
+                      {quizDefinition.questions[activeQuizQuestion].options.map((option) => {
+                        const optionLetter = option.split(".")[0];
+                        const checked = draftQuizResponses[activeQuizQuestion] === optionLetter;
+
+                        return (
+                          <label
+                            key={option}
+                            className={`flex cursor-pointer items-start gap-3 rounded-2xl border px-4 py-4 text-sm leading-7 transition ${
+                              checked
+                                ? "border-brand bg-white text-slate-900"
+                                : "border-brand/10 bg-white/80 text-slate-700 hover:border-brand/25"
+                            }`}
+                          >
+                            <input
+                              type="radio"
+                              name={`step-quiz-${activeQuizQuestion}`}
+                              checked={checked}
+                              onChange={() => updateQuizResponse(activeQuizQuestion, optionLetter)}
+                              className="mt-1"
+                            />
+                            <span>{option}</span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                    <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setActiveQuizQuestion((current) => Math.max(0, current - 1))
+                        }
+                        disabled={activeQuizQuestion === 0}
+                        className="rounded-full border border-brand/20 bg-white px-5 py-3 text-sm font-semibold text-brand-dark hover:bg-surface disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        Previous
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setActiveQuizQuestion((current) =>
+                            Math.min(quizDefinition.questions.length - 1, current + 1)
+                          )
+                        }
+                        disabled={activeQuizQuestion === quizDefinition.questions.length - 1}
+                        className="rounded-full bg-brand px-5 py-3 text-sm font-semibold text-white hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        Next
+                      </button>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="mt-6 flex flex-wrap items-center gap-3">
@@ -924,7 +968,7 @@ export function MemberWorkspace({
               </p>
               {quizRequired && !quizPassed ? (
                 <div className="mt-4 rounded-2xl border border-brand/10 bg-white/90 px-4 py-4 text-sm leading-7 text-slate-700">
-                  Finish the Step 1 video check with all answers correct to open these prompts.
+                  Finish the Step {availableStep.number} video check with all answers correct to open these prompts.
                 </div>
               ) : null}
               <div className="mt-4 space-y-4">

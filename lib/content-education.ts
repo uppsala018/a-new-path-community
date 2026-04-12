@@ -120,6 +120,12 @@ export const educationalPages: ContentPage[] = [
     ],
     intro:
       "One of the strongest ideas in A New Path is that the right question is often not only 'why the addiction' but also 'why the pain'.",
+    heroImage: {
+      src: "/healing-from-trauma.png",
+      alt: "Educational visual showing trauma, healing, and the recovery path in A New Path.",
+      caption:
+        "This trauma image gives the learn page a visual anchor while the text explains why pain, attachment, and hidden wounds can shape compulsive behavior."
+    },
     sections: [
       {
         heading: "Trauma is the wound inside",
@@ -154,7 +160,8 @@ export const educationalPages: ContentPage[] = [
       }
     ],
     ctaTitle: "Understand the brain side too",
-    ctaText: "The next foundation page explains how reward pathways and dopamine adaptation reinforce the behavior over time."
+    ctaText:
+      "The next foundation page explains how reward pathways and dopamine adaptation reinforce the behavior over time."
   },
   {
     slug: "reward-system-and-brain-science",
@@ -224,39 +231,167 @@ export const stepPages: ContentPage[] = programSteps.map((step) => ({
     "unwanted behavior recovery"
   ],
   intro: `${step.summary} ${step.statement}`,
-  sections: [
-    {
-      heading: "Step statement",
-      body: [step.statement]
-    },
-    {
-      heading: "What this step is doing",
-      body: [
-        step.teaching,
-        "This public page explains the meaning of the step. In the member area, the same step becomes structured writing, reflection, and guided progression."
-      ]
-    },
-    {
-      heading: "Why this step matters in recovery",
-      body: [
-        "Each of the 12 steps addresses a specific movement in recovery: honesty, surrender, willingness, repair, spiritual growth, or daily practice.",
-        "A New Path treats the steps as a real path of change, not just ideas to agree with. Each step asks for honesty, action, and progress into the next stage of recovery.",
-      ]
-    },
-    {
-      heading: "How A New Path presents this step",
-      body: [
-        "Each step is treated as a guided module with teaching, writing prompts, assignments, and a reflection question.",
-        step.status === "private"
-          ? "This step receives stronger privacy treatment because it often involves deeply personal history and long-form inventory work."
-          : "Members unlock this step as they progress through the program in order."
-      ]
-    },
-    {
-      heading: "Key prompts",
-      body: step.prompts
-    }
-  ],
+  heroImage:
+    step.number === 1
+      ? {
+          src: "/step-1-sacred-honesty.png",
+          alt: "Illustrated teaching graphic for Step 1 showing denial, false relief, growing cost, and the path toward clean truth and surrender.",
+          caption:
+            "This Step 1 teaching image shows the cycle of trigger, false promise, and deepening cost, along with the movement toward honesty, broken denial, and the clean truth that starts recovery."
+        }
+      : step.number === 2
+        ? {
+            src: "/step-2-doorway-to-hope.png",
+            alt: "Illustrated teaching graphic for Step 2 showing the limits of self-will and the doorway to hope.",
+            caption:
+              "This Step 2 teaching image supports the public page by showing the movement from self-reliance and isolation toward openness, hope, and help beyond exhausted willpower."
+          }
+        : undefined,
+  sections:
+    step.number === 1
+      ? [
+          {
+            heading: "Identifying the Trigger",
+            body: [
+              "Step 1 begins by naming what sets the cycle in motion. Tension, loneliness, fear, shame, and emptiness often arrive before the behavior itself.",
+              "This matters because recovery starts when the trigger is no longer treated as random or mysterious. The pattern can be seen."
+            ]
+          },
+          {
+            heading: "The False Promise",
+            body: [
+              "The behavior presents itself as relief, comfort, escape, or a quick solution. That promise feels persuasive because it speaks to immediate pain.",
+              "The problem is that the relief does not last. It interrupts pain for a moment while quietly strengthening the pattern underneath it."
+            ]
+          },
+          {
+            heading: "The Deepening Cost",
+            body: [
+              "What seems private at first begins to take more than it gives. Trust weakens, peace erodes, self-respect drops, and life becomes narrower.",
+              "Step 1 asks the visitor to stop calling that cost small. The cost is part of the truth."
+            ]
+          },
+          {
+            heading: "Breaking Denial",
+            body: [
+              "Denial is broken when the person stops bargaining with reality. The issue is no longer framed as a harmless habit or a manageable flaw.",
+              "At this point, honesty becomes more important than self-protection."
+            ]
+          },
+          {
+            heading: "The Power of Powerlessness",
+            body: [
+              "Admitting loss of control does not make a person weaker in the final sense. It makes them reachable, teachable, and open to help.",
+              "That is the paradox of Step 1: surrender to the truth creates the conditions for actual strength."
+            ]
+          },
+          {
+            heading: "Clean Truth vs. Dirty Confusion",
+            body: [
+              "A New Path treats honesty as a cleaner ground than mixed motives, minimization, or self-justifying confusion.",
+              "The page is meant to show that pain faced honestly is less dangerous than pain hidden behind distortion."
+            ]
+          },
+          {
+            heading: "The Path to Sacred Honesty",
+            body: [
+              "The image of the step points to movement, not performance. Honest surrender becomes the beginning of real recovery, not the end of it.",
+              "The member area turns that honesty into writing, reflection, and guided action."
+            ]
+          }
+        ]
+      : step.number === 2
+        ? [
+            {
+              heading: "The Limits of Self-Will",
+              body: [
+                "Step 2 begins where Step 1 leaves off: with the recognition that willpower alone has already been tested and found insufficient.",
+                "The public page should make clear that the issue is not a lack of effort. It is the limit of self-reliance."
+              ]
+            },
+            {
+              heading: "The Cycle of Exhaustion",
+              body: [
+                "Trying to control everything alone eventually becomes exhausting. The person keeps promising change while carrying the same burden in the same way.",
+                "The cycle continues until the person is willing to see that the old method is draining life rather than restoring it."
+              ]
+            },
+            {
+              heading: "The Worship of Self-Sufficiency",
+              body: [
+                "This step names the hidden spiritual problem of treating oneself as the final source of strength and authority.",
+                "A New Path does not treat that as harmless independence. It treats it as a false center that has to be loosened."
+              ]
+            },
+            {
+              heading: "Isolation Grows Where Pride Grows",
+              body: [
+                "Pride does not always look loud or arrogant. Sometimes it looks tired, ashamed, desperate, and still unwilling to ask for help.",
+                "The more that posture continues, the more isolated the person becomes."
+              ]
+            },
+            {
+              heading: "The Doorway to Hope",
+              body: [
+                "Hope in Step 2 is not shallow optimism. It is the first willingness to believe that help exists beyond personal effort.",
+                "This is the doorway where recovery starts to feel possible again."
+              ]
+            },
+            {
+              heading: "Openness Over Certainty",
+              body: [
+                "The step does not require a polished theology. It asks for honesty, humility, and openness to a Higher Power, understood by many as God.",
+                "A visitor does not have to pretend certainty before they become willing to seek help."
+              ]
+            },
+            {
+              heading: "A Reordered Center",
+              body: [
+                "The practical shift is a new center of gravity. Self becomes no longer the final rescuer.",
+                "That change opens the door for guidance, prayer, support, and a different kind of strength."
+              ]
+            },
+            {
+              heading: "Maybe I Can Be Changed",
+              body: [
+                "This final section on the page should leave the visitor with real hope, not vague inspiration.",
+                "The central message is simple: change is possible, but not by the same exhausted pattern that caused the problem."
+              ]
+            }
+          ]
+        : [
+            {
+              heading: "Step statement",
+              body: [step.statement]
+            },
+            {
+              heading: "What this step is doing",
+              body: [
+                step.teaching,
+                "This public page explains the meaning of the step. In the member area, the same step becomes structured writing, reflection, and guided progression."
+              ]
+            },
+            {
+              heading: "Why this step matters in recovery",
+              body: [
+                "Each of the 12 steps addresses a specific movement in recovery: honesty, surrender, willingness, repair, spiritual growth, or daily practice.",
+                "A New Path treats the steps as a real path of change, not just ideas to agree with. Each step asks for honesty, action, and progress into the next stage of recovery."
+              ]
+            },
+            {
+              heading: "How A New Path presents this step",
+              body: [
+                "Each step is treated as a guided module with teaching, writing prompts, assignments, and a reflection question.",
+                step.status === "private"
+                  ? "This step receives stronger privacy treatment because it often involves deeply personal history and long-form inventory work."
+                  : "Members unlock this step as they progress through the program in order."
+              ]
+            },
+            {
+              heading: "Key prompts",
+              body: step.prompts
+            }
+          ],
   ctaTitle: "Work this step interactively",
   ctaText: "The member area turns this public overview into a guided module with saved writing, uploads, and progression tracking."
 }));

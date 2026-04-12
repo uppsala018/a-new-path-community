@@ -9,6 +9,10 @@ export type ProgramStep = {
   teaching: string;
   prompts: string[];
   reflection: string;
+  video?: {
+    title: string;
+    src: string;
+  };
   quiz?: {
     title: string;
     passingScore: number;
@@ -36,6 +40,10 @@ export const programSteps: ProgramStep[] = [
       "What has this behavior cost you already, and what might it cost if nothing changes?"
     ],
     reflection: "What has this behavior cost me that I can never get back?",
+    video: {
+      title: "Step 1 Video Teaching",
+      src: "/Understanding_Step_1.mp4"
+    },
     quiz: {
       title: "Step 1 Video Check",
       passingScore: 10,
@@ -168,6 +176,121 @@ export const programSteps: ProgramStep[] = [
       "What kinds of help are hardest for you to accept?"
     ],
     reflection: "What would it mean to stop fighting this alone?",
+    video: {
+      title: "Step 2 Video Teaching",
+      src: "/Doorway_to_Hope__Step_2.mp4"
+    },
+    quiz: {
+      title: "Step 2 Video Check",
+      passingScore: 10,
+      questions: [
+        {
+          question:
+            "Based on the concepts in the teaching video, how is the 'hope' found in Step 2 specifically described?",
+          options: [
+            "A. A shallow optimism that everything will turn out fine.",
+            "B. A feeling of being immediately rescued from fear and shame.",
+            "C. The slow willingness to believe one is not doomed to a cycle.",
+            "D. A form of positive thinking used to override negative emotions."
+          ],
+          correctAnswer: "C"
+        },
+        {
+          question:
+            "According to the teaching, why does a person often feel more afraid after completing Step 1?",
+          options: [
+            "A. Because denial has broken and the problem now stands in the light.",
+            "B. Because they are forced to adopt a polished theology immediately.",
+            "C. Because they have lost their sense of responsibility.",
+            "D. Because they must rely on their own willpower more aggressively."
+          ],
+          correctAnswer: "A"
+        },
+        {
+          question:
+            "What is described as the 'major spiritual shift' that occurs in Step 2?",
+          options: [
+            "A. Achieving perfect faith and the total removal of doubt.",
+            "B. Ceasing to ask the exhausted self to be the ultimate rescuer.",
+            "C. Becoming entirely passive and waiting for a miracle.",
+            "D. Committing to work harder and manage one's life better."
+          ],
+          correctAnswer: "B"
+        },
+        {
+          question:
+            "In the context of the teaching video, how does 'pride' manifest in a way that is not traditionally arrogant?",
+          options: [
+            "A. By rejecting the concept of a Higher Power entirely.",
+            "B. By appearing tired, ashamed, or desperate while insisting on handling things alone.",
+            "C. By constantly seeking the advice of others.",
+            "D. By being overly optimistic about the future despite clear problems."
+          ],
+          correctAnswer: "B"
+        },
+        {
+          question:
+            "What does the teaching video suggest is the 'beginning of sanity'?",
+          options: [
+            "A. When a person finally gains full control over their compulsions.",
+            "B. When all skepticism regarding spiritual intervention disappears.",
+            "C. When a person stops expecting self-will to provide what it wasn't designed to provide.",
+            "D. When a person can successfully explain their new theology."
+          ],
+          correctAnswer: "C"
+        },
+        {
+          question:
+            "According to the script, what is the 'worship of self-sufficiency'?",
+          options: [
+            "A. Treating oneself as the highest authority and final source of strength.",
+            "B. Taking personal responsibility for one's actions and decisions.",
+            "C. A healthy reliance on one's innate talents and strengths.",
+            "D. The belief that discipline is the primary key to recovery."
+          ],
+          correctAnswer: "A"
+        },
+        {
+          question:
+            "The teaching video describes Step 2 as 'realism of a higher kind.' Why?",
+          options: [
+            "A. It proves that willpower is a decorative rather than functional tool.",
+            "B. It provides a scientific explanation for behavioral change.",
+            "C. It acknowledges that deep problems require help that is equally deep.",
+            "D. It accepts that some people are beyond the reach of help."
+          ],
+          correctAnswer: "C"
+        },
+        {
+          question:
+            "What role does willpower play after a person moves into Step 2?",
+          options: [
+            "A. It is discarded entirely as a useless or harmful human trait.",
+            "B. It becomes the primary driver of spiritual transformation.",
+            "C. It is used to make decisions and take actions without being the 'savior'.",
+            "D. It is redirected to help the person manage their own recovery alone."
+          ],
+          correctAnswer: "C"
+        },
+        {
+          question:
+            "True or False: Step 2 requires a person to stop feeling skeptical or resistant before they can seek help.",
+          options: ["A. True", "B. False"],
+          correctAnswer: "B"
+        },
+        {
+          question:
+            "According to the teaching, where does hopelessness often grow?",
+          options: [
+            "A. In people who have too much faith in others.",
+            "B. Where isolation and pride are allowed to thrive.",
+            "C. In environments where rules are too strict.",
+            "D. Only in those who do not believe in a specific religion."
+          ],
+          correctAnswer: "B"
+        }
+      ]
+    },
     status: "locked"
   },
   {

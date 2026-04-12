@@ -6,6 +6,11 @@ export type ContentPage = {
   seoDescription: string;
   keywords: string[];
   intro: string;
+  heroImage?: {
+    src: string;
+    alt: string;
+    caption?: string;
+  };
   sections: Array<{
     heading: string;
     body: string[];

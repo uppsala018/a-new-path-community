@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { ContentPage } from "@/lib/content-types";
 
 type PublicContentPageProps = {
@@ -42,6 +43,23 @@ export function PublicContentPage({
         </p>
         <h1 className="mt-3 text-5xl font-semibold text-slate-900">{page.title}</h1>
         <p className="mt-6 text-lg leading-8 text-slate-700">{page.intro}</p>
+        {page.heroImage ? (
+          <figure className="mt-8 overflow-hidden rounded-[28px] border border-brand/10 bg-white/85 p-4 shadow-glow">
+            <Image
+              src={page.heroImage.src}
+              alt={page.heroImage.alt}
+              width={1408}
+              height={768}
+              className="h-auto w-full rounded-[22px]"
+              priority
+            />
+            {page.heroImage.caption ? (
+              <figcaption className="mt-4 text-sm leading-7 text-slate-600">
+                {page.heroImage.caption}
+              </figcaption>
+            ) : null}
+          </figure>
+        ) : null}
         <div className="mt-6 flex flex-wrap gap-2">
           {page.keywords.map((keyword) => (
             <span
