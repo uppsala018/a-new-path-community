@@ -29,6 +29,8 @@ If the app is already set up and you only need to add forum replies later, also 
 
 - [forum-replies.sql](C:\Users\renem\Downloads\A-New-Path-Community\supabase\forum-replies.sql)
 
+The schema now also includes `usage_events`, which powers the admin usage dashboard.
+
 ## Storage Bucket
 
 Create a storage bucket named:

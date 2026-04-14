@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { addForumPost, requireCurrentSession } from "@/lib/backend/store";
+import { addForumPost, recordApiRequest, requireCurrentSession } from "@/lib/backend/store";
 
 export async function POST(request: Request) {
   try {
@@ -11,10 +11,17 @@ export async function POST(request: Request) {
     };
 
     if (!body.channel || !body.message?.trim()) {
-      return NextResponse.json(
+      const response = NextResponse.json(
         { error: "Channel and message are required." },
         { status: 400 }
       );
+      await recordApiRequest({
+        request,
+        route: "/api/member/forum",
+        statusCode: 400,
+        user: session.user
+      });
+      return response;
     }
 
     const forumPosts = await addForumPost({
@@ -25,13 +32,26 @@ export async function POST(request: Request) {
       parentPostId: body.parentPostId
     });
 
-    return NextResponse.json({ forumPosts });
+    const response = NextResponse.json({ forumPosts });
+    await recordApiRequest({
+      request,
+      route: "/api/member/forum",
+      statusCode: 200,
+      user: session.user
+    });
+    return response;
   } catch (error) {
-    return NextResponse.json(
+    const response = NextResponse.json(
       {
         error: error instanceof Error ? error.message : "Unable to save forum post."
       },
       { status: error instanceof Error && error.message === "Unauthorized" ? 401 : 400 }
     );
+    await recordApiRequest({
+      request,
+      route: "/api/member/forum",
+      statusCode: error instanceof Error && error.message === "Unauthorized" ? 401 : 400
+    });
+    return response;
   }
 }

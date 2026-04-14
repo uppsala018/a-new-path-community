@@ -31,10 +31,28 @@ create table if not exists public.forum_posts (
   created_at timestamptz not null default timezone('utc', now())
 );
 
+create table if not exists public.usage_events (
+  id uuid primary key default gen_random_uuid(),
+  event_type text not null,
+  session_id text not null,
+  user_id uuid references auth.users(id) on delete set null,
+  user_email text,
+  user_handle text,
+  path text,
+  route text,
+  method text,
+  status_code integer,
+  duration_ms integer,
+  referrer text,
+  user_agent text,
+  created_at timestamptz not null default timezone('utc', now())
+);
+
 alter table public.profiles enable row level security;
 alter table public.member_progress enable row level security;
 alter table public.interest_submissions enable row level security;
 alter table public.forum_posts enable row level security;
+alter table public.usage_events enable row level security;
 
 drop policy if exists "profiles_select_own" on public.profiles;
 create policy "profiles_select_own"
@@ -91,3 +109,8 @@ on public.forum_posts
 for insert
 to authenticated
 with check (auth.uid() = user_id);
+
+create index if not exists usage_events_created_at_idx on public.usage_events (created_at desc);
+create index if not exists usage_events_event_type_idx on public.usage_events (event_type);
+create index if not exists usage_events_session_id_idx on public.usage_events (session_id);
+create index if not exists usage_events_user_id_idx on public.usage_events (user_id);

@@ -16,5 +16,9 @@ export default async function MemberPage() {
     redirect("/login");
   }
 
+  if (session.user.isAdmin) {
+    redirect("/admin");
+  }
+
   return <MemberWorkspace initialProfile={session.user} initialProgress={session.progress} />;
 }

@@ -39,6 +39,7 @@ export function AuthPrototype({ mode }: AuthPrototypeProps) {
         user?: MemberProfile;
         error?: string;
         needsEmailConfirmation?: boolean;
+        isAdmin?: boolean;
       };
 
       if (!response.ok) {
@@ -59,7 +60,7 @@ export function AuthPrototype({ mode }: AuthPrototypeProps) {
           : "Login accepted. Entering the member area."
       );
 
-      router.push("/member");
+      router.push(payload.isAdmin ? "/admin" : "/member");
       router.refresh();
     } catch {
       setMessage("The server could not be reached.");

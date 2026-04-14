@@ -52,6 +52,7 @@ export type MemberProfile = {
   email: string;
   handle: string;
   createdAt: string;
+  isAdmin?: boolean;
 };
 
 export function createEmptyModule(
