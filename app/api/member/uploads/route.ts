@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { recordApiRequest } from "@/lib/backend/store";
 import {
   requireCurrentSession,
   uploadFilesForUser
@@ -13,25 +12,11 @@ export async function POST(request: Request) {
     const files = formData.getAll("files").filter((entry): entry is File => entry instanceof File);
 
     if (!Number.isFinite(stepNumber) || stepNumber < 1) {
-      const response = NextResponse.json({ error: "A valid step number is required." }, { status: 400 });
-      await recordApiRequest({
-        request,
-        route: "/api/member/uploads",
-        statusCode: 400,
-        user: session.user
-      });
-      return response;
+      return NextResponse.json({ error: "A valid step number is required." }, { status: 400 });
     }
 
     if (!files.length) {
-      const response = NextResponse.json({ error: "At least one file is required." }, { status: 400 });
-      await recordApiRequest({
-        request,
-        route: "/api/member/uploads",
-        statusCode: 400,
-        user: session.user
-      });
-      return response;
+      return NextResponse.json({ error: "At least one file is required." }, { status: 400 });
     }
 
     const progress = await uploadFilesForUser({
@@ -39,26 +24,13 @@ export async function POST(request: Request) {
       stepNumber,
       files
     });
-    const response = NextResponse.json({ progress });
-    await recordApiRequest({
-      request,
-      route: "/api/member/uploads",
-      statusCode: 200,
-      user: session.user
-    });
-    return response;
+    return NextResponse.json({ progress });
   } catch (error) {
-    const response = NextResponse.json(
+    return NextResponse.json(
       {
         error: error instanceof Error ? error.message : "Unable to save upload."
       },
       { status: error instanceof Error && error.message === "Unauthorized" ? 401 : 400 }
     );
-    await recordApiRequest({
-      request,
-      route: "/api/member/uploads",
-      statusCode: error instanceof Error && error.message === "Unauthorized" ? 401 : 400
-    });
-    return response;
   }
 }

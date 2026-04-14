@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
-import { isAdminEmail } from "@/lib/admin";
-import { recordApiRequest, upsertProfileForUser } from "@/lib/backend/store";
+import { upsertProfileForUser } from "@/lib/backend/store";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { getSiteUrl } from "@/lib/site-url";
 
 export async function POST(request: Request) {
   try {
@@ -14,12 +12,10 @@ export async function POST(request: Request) {
     };
 
     if (!body.email || !body.password) {
-      const response = NextResponse.json(
+      return NextResponse.json(
         { error: "Email and password are required." },
         { status: 400 }
       );
-      await recordApiRequest({ request, route: "/api/auth/signup", statusCode: 400 });
-      return response;
     }
 
     const safeHandle =
@@ -31,7 +27,6 @@ export async function POST(request: Request) {
       email: body.email.trim(),
       password: body.password,
       options: {
-        emailRedirectTo: `${getSiteUrl()}/auth/callback?next=/member`,
         data: {
           handle: safeHandle
         }
@@ -39,18 +34,14 @@ export async function POST(request: Request) {
     });
 
     if (error) {
-      const response = NextResponse.json({ error: error.message }, { status: 400 });
-      await recordApiRequest({ request, route: "/api/auth/signup", statusCode: 400 });
-      return response;
+      return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
     if (!data.user) {
-      const response = NextResponse.json(
+      return NextResponse.json(
         { error: "Supabase did not return a user record." },
         { status: 400 }
       );
-      await recordApiRequest({ request, route: "/api/auth/signup", statusCode: 400 });
-      return response;
     }
 
     const user = await upsertProfileForUser({
@@ -59,27 +50,17 @@ export async function POST(request: Request) {
       handle: safeHandle
     });
 
-    const response = NextResponse.json({
+    return NextResponse.json({
       user,
-      isAdmin: isAdminEmail(user.email),
       needsEmailConfirmation: !data.session
     });
-    await recordApiRequest({
-      request,
-      route: "/api/auth/signup",
-      statusCode: 200,
-      user
-    });
-    return response;
   } catch (error) {
-    const response = NextResponse.json(
+    return NextResponse.json(
       {
         error:
           error instanceof Error ? error.message : "Unable to create the account."
       },
       { status: 400 }
     );
-    await recordApiRequest({ request, route: "/api/auth/signup", statusCode: 400 });
-    return response;
   }
 }

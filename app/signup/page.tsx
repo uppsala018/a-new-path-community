@@ -11,7 +11,7 @@ export default async function SignupPage() {
   const session = await getCurrentSession();
 
   if (session) {
-    redirect(session.user.isAdmin ? "/admin" : "/member");
+    redirect("/member");
   }
 
   return (

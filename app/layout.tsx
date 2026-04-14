@@ -1,12 +1,10 @@
 ﻿import type { Metadata } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { getSiteUrl } from "@/lib/site-url";
-import { UsageTracker } from "@/components/usage-tracker";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(getSiteUrl()),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"),
   title: {
     default: "A New Path Community",
     template: "%s | A New Path Community"
@@ -26,7 +24,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body>
-        <UsageTracker />
         <header className="sticky top-0 z-50 border-b border-brand/10 bg-background/85 backdrop-blur">
           <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
             <Link href="/" className="text-sm font-semibold uppercase tracking-[0.28em] text-brand-dark">

@@ -565,11 +565,6 @@ export function MemberWorkspace({
         <h1 className="mt-3 text-4xl font-semibold text-slate-900">
           Welcome{profile.handle ? `, ${profile.handle}` : ""}.
         </h1>
-        {profile.isAdmin ? (
-          <p className="mt-3 inline-flex rounded-full border border-brand/20 bg-brand/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-brand-dark">
-            Admin access
-          </p>
-        ) : null}
         <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-700">
           This workspace saves your member progress on the server. You can work through
           a step over time, save a draft when you want to stop, come back later, keep a
@@ -599,14 +594,6 @@ export function MemberWorkspace({
           >
             Log out
           </button>
-          {profile.isAdmin ? (
-            <a
-              href="/admin"
-              className="rounded-full bg-brand-dark px-5 py-3 text-sm font-semibold text-white hover:bg-slate-900"
-            >
-              Open admin
-            </a>
-          ) : null}
           <p className="text-sm text-slate-600">
             {saving
               ? "Saving to server..."

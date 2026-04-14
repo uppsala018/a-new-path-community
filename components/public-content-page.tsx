@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { ContentPage } from "@/lib/content-types";
-import { getSiteUrl } from "@/lib/site-url";
 
 type PublicContentPageProps = {
   page: ContentPage;
@@ -16,7 +15,7 @@ export function PublicContentPage({
   backHref,
   backLabel
 }: PublicContentPageProps) {
-  const baseUrl = getSiteUrl();
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
   const pageUrl = `${baseUrl}${backHref}/${page.slug}`;
   const schema = {
     "@context": "https://schema.org",

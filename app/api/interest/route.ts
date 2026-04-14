@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createInterestSubmission, recordApiRequest } from "@/lib/backend/store";
+import { createInterestSubmission } from "@/lib/backend/store";
 
 export async function POST(request: Request) {
   try {
@@ -10,12 +10,10 @@ export async function POST(request: Request) {
     };
 
     if (!body.email || !body.path) {
-      const response = NextResponse.json(
+      return NextResponse.json(
         { error: "Email and preferred path are required." },
         { status: 400 }
       );
-      await recordApiRequest({ request, route: "/api/interest", statusCode: 400 });
-      return response;
     }
 
     const submission = await createInterestSubmission({
@@ -24,18 +22,14 @@ export async function POST(request: Request) {
       message: body.message || ""
     });
 
-    const response = NextResponse.json({ submission });
-    await recordApiRequest({ request, route: "/api/interest", statusCode: 200 });
-    return response;
+    return NextResponse.json({ submission });
   } catch (error) {
-    const response = NextResponse.json(
+    return NextResponse.json(
       {
         error:
           error instanceof Error ? error.message : "Unable to save your interest."
       },
       { status: 400 }
     );
-    await recordApiRequest({ request, route: "/api/interest", statusCode: 400 });
-    return response;
   }
 }
